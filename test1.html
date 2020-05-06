@@ -1,14 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        html {
+            font-size: 20px;
+        }
+
+        .select {
+            position: relative;
+            width: 15rem;
+            height: 15rem;
+            margin: 20px 0;
+        }
+
+        #bigimg {
+            border: solid;
+            position: absolute;
+        }
+
+        #editimg{
+            width: 5rem;
+            height: 5rem;
+            border: solid;
+            position: absolute;
+            left: 100px;
+            top: 100px;
+            visibility: hidden;
+        }
+
+        .showbox>span {
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+            border: solid;
+            vertical-align: bottom;
+        }
+    </style>
 </head>
+
 <body>
-    <div>aaaddeeww</div>
-    <div>aaaaaaaaaaaaaa</div>
-    <div>sssssssssssssss</div>
-    <img src="" alt="">
+    <!-- <img class="tagimg" src="http://via.placeholder.com/50?text=aaa" alt=""> -->
+    <input type="file" class="file" accept="image/*">
+    <input type="button" value="save" class="save">
+    <div class="select">
+        <canvas id="bigimg" width="300" height="300"></canvas>
+        <canvas id="editimg" draggable="true" width="100" height="100"></canvas>
+    </div>
+    <div class="showbox">
+        <span class="showimg" draggable="true"></span>
+        <span class="saveimg"><img src="" alt=""></span>
+    </div>
+    <script>
+        /** @type {HTMLCanvasElement} */
+        var showbox = document.querySelector('.showbox');
+        var save = document.querySelector('.save');
+        var bigimg = document.querySelector('#bigimg');
+        var editimg = document.querySelector('#editimg');
+        var showimg = document.querySelector('.showimg');
+        var saveimg = document.querySelector('.saveimg>img');
+        var ctx = bigimg.getContext("2d");
+        var ctx1 = editimg.getContext("2d");
+
+        var file = document.querySelector('.file');
+        file.addEventListener('change', function () {
+            console.dir(this);
+            var filedata = this.files[0];
+            var fr = new FileReader();
+            fr.readAsDataURL(filedata);
+            fr.onload = function (e) {
+                console.log(e);
+                var img = new Image();
+                img.src = e.target.result;
+                img.onload = function () {
+                    ctx.drawImage(img, 0, 0, 300, 300, 0, 0, 300, 300);
+                    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                    ctx.fillRect(0, 0, 300, 300);
+                    editimg.style.visibility = 'visible';
+
+                    //图片加载完初始化showimg背景图
+                    var clipx, clipy, x, x1, y, y1, imgurl, saveurl;
+                    clipx = getComputedStyle(editimg).left;
+                    clipy = getComputedStyle(editimg).top;
+                    imgurl = bigimg.toDataURL();
+                    console.log(clipx, clipy);
+                    showimg.style.backgroundImage = 'url(' + imgurl + ')';
+                    showimg.style.backgroundPosition = '-' + clipx + ' ' + '-' + clipy;
+                    showimg.style.backgroundRepeat = 'no-repeat';
+                    
+
+                    editimg.addEventListener('dragstart', function (e) {
+
+                    })
+                    editimg.addEventListener('drag', function (e) {
+
+                    })
+                    bigimg.addEventListener('dragenter', function (e) {
+                        e.preventDefault();
+                    })
+                    bigimg.addEventListener('dragover', function (e) {
+                        e.preventDefault();
+                    })
+                    editimg.addEventListener('mousedown', function (e) {
+                        e.stopPropagation();
+                        x1 = e.offsetX;
+                        y1 = e.offsetY;
+                    })
+                    bigimg.addEventListener('drop', function (e) {
+                        e.preventDefault();
+                        x = e.offsetX - x1;
+                        y = e.offsetY - y1;
+                        editimg.style.left = x + 'px';
+                        editimg.style.top = y + 'px';
+                        console.log(e);
+                        clipx = getComputedStyle(editimg).left;
+                        clipy = getComputedStyle(editimg).top;
+                        console.log(clipx, clipy);
+                        showimg.style.backgroundPosition = '-' + clipx + ' ' + '-' + clipy;
+                    })
+                    save.addEventListener('click', function () {
+                        ctx1.drawImage(img, parseInt(clipx), parseInt(clipy), 100, 100, 0, 0, 100, 100);
+                        saveurl = editimg.toDataURL();
+                        saveimg.src = saveurl;
+                        var a = document.createElement('a')
+                        // 创建一个单击事件
+                        var event = new MouseEvent('click')
+                        // 将a的download属性设置为我们想要下载的图片名称，若name不存在则使用‘下载图片名称’作为默认名称
+                        a.download = name || '下载图片名称'
+                        // 将生成的URL设置为a.href属性
+                        a.href = saveurl
+                        var r = confirm('保存到本地');
+                        if(r){
+                            // 触发a的单击事件
+                            a.dispatchEvent(event)
+                        }
+                        ctx1.clearRect(0,0,100,100);
+                    })
+                }
+            }
+        })
+    </script>
 </body>
+
 </html>
