@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //第一题
+        function regstr(str){
+            var reg = /\?[a-z]/ig;        
+            var stra = str.replace(reg,function(x){
+                return x[1].toLocaleUpperCase()
+            });
+            var reg1 = /( \?+)|(\?)/ig;
+            var strn = stra.replace(reg1,'');
+            return strn;
+        }
+        var str = 'I? love ?? the ?great ? ?wall in ?beijing';        
+        console.log(regstr(str));
+        
+        //第二题
+        var arr = [];
+        function getarr(i,max){
+            if(i<=max){
+                arr.push(i);
+                return arguments.callee(i+2,max);
+            }
+        }
+        getarr(0,100);
+        console.log(arr);
+        
+        // 第三题
+        function a(){
+            console.log('a...');
+        }
+        function b(){
+            console.log('b...');
+        }
+        function c(){
+            console.log('c...');
+        }
+        function d(){
+            console.log('d...');
+        }
+
+        var obj0 = [
+            {fun:a,intervalTime:15,startTime:10},
+            {fun:b,intervalTime:13,startTime:10},
+        ]
+        var obj1 = [
+            {fun:a,intervalTime:6},
+            {fun:b,intervalTime:4}
+        ]
+        var obj2 = [
+            {fun:a,intervalTime:4,startTime:1},
+            {fun:b,intervalTime:4,startTime:3},
+            {fun:c,intervalTime:3,startTime:3},
+            {fun:d,intervalTime:4,startTime:4}
+        ]
+        var obj3 = [
+            {fun:b,intervalTime:3},
+            {fun:c,intervalTime:3}
+        ]
+
+        function todo(obj){
+            for(let i=0;i<obj.length;i++){
+                if(obj[i].startTime){
+                    //顺序循环调用
+                    setTimeout(function(){
+                        obj[i].fun();
+                        timer = setInterval(()=>{
+                            obj[i].fun();
+                        },obj[i].intervalTime*1000)
+                    },obj[i].startTime*1000)
+                }else{
+                    //循环调用
+                    timer = setInterval(()=>{
+                        obj[i].fun();
+                    },obj[i].intervalTime*1000)
+                }
+            }
+        }
+        todo(obj0);
+        todo(obj1);
+        todo(obj2);
+        todo(obj3);
+    </script>
+</body>
+</html>

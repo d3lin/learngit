@@ -4,8 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .container{
+            margin: 20px;
+            /* transform-style: preserve-3d; */
+            /* perspective-origin: 20px 0px; */
+            /* perspective: 500px; */
+        }
+        .div1{
+            width: 100px;
+            height: 100px;
+            border: solid;
+            float: left;
+            margin: 10px;
+        }
+        .div1>div{
+            width: 100px;
+            height: 100px;
+            border: solid;
+            background: #0f0;
+            perspective: 500px;
+            transform: rotatey(45deg);
+            /* transform: perspective(500px) rotateY(45deg); */
+        }
+    </style>
 </head>
 <body>
-    <div>dev branch....</div>
+    <div class="container">
+        <div class="div1"><div></div></div>
+        <div class="div1"><div></div></div>
+        <div class="div1"><div></div></div>
+        <img src="./imgs/1.jpg" alt="">
+        <input type="file" name="" id="">
+    </div>
+    <script>
+        // var blob = new Blob(new String('aaa'));
+        var blob = new Blob([document.querySelector('img')]);
+        // var blob = new Blob([document.querySelector('input[type = "file"')]);
+        console.dir(blob);
+        var url = URL.createObjectURL(blob);
+        var a = document.body.appendChild(document.createElement('a'));
+        console.log(a)
+        a.innerHTML = 'download';
+        a.href = url;
+        var fr = new FileReader();
+        fr.readAsDataURL(blob);
+        fr.onload = function(){
+            console.log(this.result)
+        }
+    </script>
 </body>
 </html>
