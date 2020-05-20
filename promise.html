@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function doit(){
+            return new Promise(function(resolve,reject){
+                setTimeout(function(msg){
+                    console.log('settimeout...');
+                    resolve(msg);
+                    // reject('error')
+                },0,'hello world')
+                console.log('promise...')
+            })
+        }
+        doit().then(function(res){
+            console.log('promise then...');
+            console.log(res);
+        })
+        .catch(function(){
+            throw new Error('出错了2');
+        })
+        
+        
+    </script>
+</body>
+</html>
